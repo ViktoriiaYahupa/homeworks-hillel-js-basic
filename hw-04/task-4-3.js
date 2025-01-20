@@ -1,4 +1,4 @@
-const height = +prompt("Enter three height");
+const height = +prompt("Enter tree height");
 
 let row = "";
 
