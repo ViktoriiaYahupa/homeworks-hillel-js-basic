@@ -19,20 +19,48 @@ function Student(firstName, lastName, birthYear, attendance, courses) {
     };
 
     this.averageGrade = function (course) {
-        const grades = this.courses[course]?.grades || [];
-        const total = grades.reduce((sum, grade) => sum + grade, 0);
-        return grades.length ? total / grades.length : 0;
+        let grades = [];
+        if (this.courses[course]) {
+            grades = this.courses[course].grades;
+        }
+
+        const total = grades.reduce(function (sum, grade) {
+            return sum + grade;
+        }, 0);
+
+        if (grades.length > 0) {
+            return total / grades.length;
+        } else {
+            return 0;
+        }
     };
 
     this.averageAttendance = function (course) {
-        const attendance = this.courses[course]?.attendance || [];
-        const total = attendance.reduce((sum, att) => sum + att, 0);
-        return attendance.length ? (total / attendance.length) : 0;
+        let attendance = [];
+        if (this.courses[course]) {
+            attendance = this.courses[course].attendance;
+        }
+
+        const total = attendance.reduce(function (sum, att) {
+            return sum + att;
+        }, 0);
+
+        if (attendance.length > 0) {
+            return total / attendance.length;
+        } else {
+            return 0;
+        }
     };
 
     this.getPassedClasses = function (course) {
-        return this.courses[course]?.attendance.length || 0;
+        if (this.courses[course]) {
+            return this.courses[course].attendance.length;
+        }
+        return 0;
     };
+
+
+
 
     this.changeCourse = function (oldCourse, newCourse) {
         if (this.courses[oldCourse]) {
@@ -64,6 +92,7 @@ function Student(firstName, lastName, birthYear, attendance, courses) {
 
 
 
+
 function Group() {
     this.students = [];
 
@@ -80,14 +109,23 @@ function Group() {
 
     this.getRanking = function (course) {
         return this.students
-            .map(student => ({
-                name: student.firstName + ' ' + student.lastName,
-                averageGrade: student.averageGrade(course),
-                averageAttendance: student.averageAttendance(course)
-            }))
-            .sort((a, b) => b.averageGrade - a.averageGrade || b.averageAttendance - a.averageAttendance);
+            .map(function (student) {
+                return {
+                    name: student.firstName + ' ' + student.lastName,
+                    averageGrade: student.averageGrade(course),
+                    averageAttendance: student.averageAttendance(course)
+                };
+            })
+            .sort(function (a, b) {
+                if (b.averageGrade !== a.averageGrade) {
+                    return b.averageGrade - a.averageGrade;
+                } else {
+                    return b.averageAttendance - a.averageAttendance;
+                }
+            });
     };
 }
+
 
 
 
@@ -103,6 +141,8 @@ student1.addGrade('Math', 5);
 student1.addAttendance('Math', 90);
 student2.addGrade('Math', 4);
 student2.addAttendance('Math', 80);
+
+
 
 const group = new Group();
 
